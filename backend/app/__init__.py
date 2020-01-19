@@ -1,18 +1,13 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 
 
 class Application:
+    '''Instantiates the Application "wrapper" object'''
     def __init__(self) -> None:
-        '''Instantiates the Application "wrapper" object'''
-        # Instantiates the WSGI Application object
+        # Instantiates WSGI Application
         self.server = Flask(__name__)
-        # Instantiates the Database object
-        self.db = SQLAlchemy(self.server)
-        # Instantiates the ODM object
-        self.ma = Marshmallow(self.server)
 
     def set_config(self, config: str) -> None:
         '''
@@ -22,11 +17,15 @@ class Application:
             config: str
             Module object where to get the configs from
         '''
-        # Sets the config for App
         self.server.config.from_object(config)
-        # Creates the database
-        self.db.create_all()
     
+    def set_database(self) -> None:
+        '''Instantiates Database'''
+        self.db = SQLAlchemy(self.server)
+
 
 app = Application()
 app.set_config('config')
+app.set_database()
+
+from app import controllers
