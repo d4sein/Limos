@@ -28,4 +28,4 @@ app = Application()
 app.set_config('config')
 app.set_database()
 
-from app import controllers
+from app import controllers, models
