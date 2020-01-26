@@ -1,6 +1,8 @@
 from flask import Flask
+from flask_restful import Api
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 
 class Application:
@@ -8,6 +10,8 @@ class Application:
     def __init__(self) -> None:
         # Instantiates WSGI Application
         self.server = Flask(__name__)
+        # Instantiates RESTful API
+        self.api = Api(self.server)
 
     def set_config(self, config: str) -> None:
         '''
@@ -22,6 +26,7 @@ class Application:
     def set_database(self) -> None:
         '''Instantiates Database'''
         self.db = SQLAlchemy(self.server)
+        self.ma = Marshmallow(self.server)
 
 
 app = Application()

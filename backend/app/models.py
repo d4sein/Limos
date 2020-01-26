@@ -2,8 +2,9 @@ from app import app
 
 
 class Food(app.db.Model):
-    __abstract__ = True
+    __tablename__ = 'food'
 
+    id = app.db.Column('index', app.db.Integer, primary_key=True)
     description = app.db.Column('Descrição', app.db.String)
     humidity = app.db.Column('Umidade (%)', app.db.Float)
     energy_kcal = app.db.Column('Energia (kcal)', app.db.Integer)
@@ -28,78 +29,8 @@ class Food(app.db.Model):
     pyridoxine = app.db.Column('Piridoxina (mg)', app.db.Float)
     niacin = app.db.Column('Niacina (mg)', app.db.Float)
     vitamin_c = app.db.Column('Vitamina C (mg)', app.db.Float)
+    category = app.db.Column('Categoria', app.db.String)
 
 
-class Cereals(Food):
-    __tablename__ = 'cereais_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Vegetables(Food):
-    __tablename__ = 'verduras_hortalicas_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Fruits(Food):
-    __tablename__ = 'frutas_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Fats(Food):
-    __tablename__ = 'gorduras_e_oleos'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Seafood(Food):
-    __tablename__ = 'pescados_e_frutos_do_mar'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Meet(Food):
-    __tablename__ = 'carnes_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Dairy(Food):
-    __tablename__ = 'leite_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Drinks(Food):
-    __tablename__ = 'bebidas'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Eggs(Food):
-    __tablename__ = 'ovos_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Sugar(Food):
-    __tablename__ = 'produtos_acucarados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Miscellaneous(Food):
-    __tablename__ = 'miscelaneas'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Industrialized(Food):
-    __tablename__ = 'outros_alimentos_industrializados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Prepared(Food):
-    __tablename__ = 'alimentos_preparados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class Legumes(Food):
-    __tablename__ = 'leguminosas_e_derivados'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
-
-
-class NutsAndSeeds(Food):
-    __tablename__ = 'nozes_e_sementes'
-    id = app.db.Column('index', app.db.Integer, primary_key=True)
+class FoodSchema(app.ma.ModelSchema):
+    class Meta: model = Food
