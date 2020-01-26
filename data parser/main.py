@@ -31,7 +31,14 @@ for csv_file in csv_files:
 
     df.drop(to_drop_cols, axis=1, inplace=True)
 
-    table_name = csv_file.replace('.csv', '')
+    # Refining data for ease of use.
+    df.fillna(0, inplace=True)
+    df.replace(['Tr', '*', ' '], 0, inplace=True)
 
-    df.to_sql(table_name, con=engine)
-    engine.execute(f'SELECT * FROM {table_name}').fetchall()
+    # Assigns new column with csv file name identifier
+    # (might be useful in the future for categorizing)
+    df = df.assign(Categoria=csv_file.replace('.csv', ''))
+
+    table_name = 'food'
+
+    df.to_sql(table_name, con=engine, if_exists='append')
