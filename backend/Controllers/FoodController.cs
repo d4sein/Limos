@@ -1,11 +1,17 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using LimosAPI.Model;
 using System.Linq;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
+using Microsoft.AspNetCore.Cors;
 
 namespace LimosAPI.Controllers
 {
     [ApiController]
+    [EnableCors("AllowOrigin")]
     [Route("api/[controller]")]
     public class FoodController : ControllerBase
     {
@@ -60,6 +66,17 @@ namespace LimosAPI.Controllers
             }
 
             return Ok(foodItem);
+        }
+
+        [HttpGet("options")]
+        public ActionResult<Food> GetOptions()
+        {
+            var result = _context.Model.FindEntityType(typeof(Food))
+                .GetProperties()
+                .Select(property => property.GetColumnName())
+                .ToList();
+
+            return Ok(result);
         }
     }
 }

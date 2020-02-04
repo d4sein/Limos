@@ -19,10 +19,24 @@ namespace LimosAPI
     {
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "AllowOrigin";
+
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:8080");
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                });
+            });
+
             services.AddDbContext<dataContext>
                 (opt => opt.UseSqlite(Configuration["Data:DatabaseAddress"]));
 
@@ -41,9 +55,17 @@ namespace LimosAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseCors();
+            // app.UseCors(builder => builder
+            //     .WithOrigins("http://localhost")
+            //     .AllowAnyHeader()
+            //     .AllowAnyMethod()
+            //     .AllowCredentials()
+            // );
+
+            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
