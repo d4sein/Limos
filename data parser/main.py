@@ -19,6 +19,7 @@ cols = ['Número do Alimento (qnt)', 'Descrição', 'Umidade (%)', 'Energia (kca
 
 
 csv_files = os.listdir('data')
+frames = list()
 
 for csv_file in csv_files:
     # Creating DataFrame
@@ -38,7 +39,9 @@ for csv_file in csv_files:
     # Assigns new column with csv file name identifier
     # (might be useful in the future for categorizing)
     df = df.assign(Categoria=csv_file.replace('.csv', ''))
+    frames.append(df)
 
-    table_name = 'food'
+table_name = 'food'
 
-    df.to_sql(table_name, con=engine, if_exists='append')
+food_df = pd.concat(frames, ignore_index=True)
+food_df.to_sql(table_name, con=engine, if_exists='append')
