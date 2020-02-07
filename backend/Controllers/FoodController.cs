@@ -34,10 +34,10 @@ namespace LimosAPI.Controllers
                 return BadRequest(response);
             }
 
-            var arrayFood = _context.Food.Where(
+            var query = _context.Food.Where(
                 c => c.Description.ToLower().Contains(search.ToLower()));
 
-            if (arrayFood.Count() == 0)
+            if (query.Count() == 0)
             {
                 var response = new Dictionary<string, string>
                 {
@@ -45,6 +45,13 @@ namespace LimosAPI.Controllers
                 };
 
                 return NoContent();
+            }
+
+            var arrayFood = new Dictionary<string, long?>() {};
+
+            foreach (var item in query)
+            {
+                arrayFood.Add(item.Description, item.Id);
             }
 
             return Ok(arrayFood);
