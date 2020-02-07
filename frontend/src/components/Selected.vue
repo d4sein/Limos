@@ -1,5 +1,5 @@
 <template>
-  <div id="selected">dd</div>
+  <div id="selected"></div>
 </template>
 
 <script lang="ts">
@@ -14,10 +14,11 @@ export default Vue.extend({
 @import '../assets/static/mixins';
 
 #selected {
+  margin-bottom: 10px;
   grid-column-start: 2;
   grid-column-end: 2;
   grid-row-start: 2;
   grid-row-end: 2;
-  background: @light-green;
+  border: 1px solid @light-green;
 }
 </style>

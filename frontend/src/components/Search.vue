@@ -3,7 +3,7 @@
     <input type="search" v-model="search" placeholder="Pesquisar..">
     <button type="submit">Adicionar</button>
     <ul id="autocomplete">
-      <li v-for="autocomplete in arrayAutocomplete" :key=autocomplete>{{ autocomplete }}</li>
+      <li v-for="(key, value) in arrayAutocomplete" :key=key @click="onClickAutocomplete(key, value)">{{ value }}</li>
     </ul>
   </div>
 </template>
@@ -15,21 +15,22 @@ import debounce from 'lodash.debounce'
 export default Vue.extend({
   name: 'search',
   methods: {
-    debouncer: function (newsearch: string) {},
-    getAnswer: function (search: string) {
-      if (search.length === 0) {
+    onClickAutocomplete: function (id: number, search: string): void {
+      this.search = search
+    },
+    getAnswer: debounce(function (this: any, search: string): void {
+      let firstAutocomplete: string = Object.keys(this.arrayAutocomplete)[0]
+
+      if (search.length === 0 || search === firstAutocomplete) {
         this.arrayAutocomplete = []
         return
       }
 
       this.axios
         .get(`food?search=${search}`)
-        .then(response => (this.arrayAutocomplete = response.data))
-        .catch(e => console.error(e))
-    }
-  },
-  created: function () {
-    this.debouncer = debounce(this.getAnswer, 300)
+        .then((response: any) => (this.arrayAutocomplete = response.data))
+        .catch(console.error)
+    }, 300)
   },
   data () {
     return {
@@ -39,7 +40,7 @@ export default Vue.extend({
   },
   watch: {
     search: function (newSearch: string, oldSearch: string) {
-      this.debouncer(newSearch)
+      this.getAnswer(newSearch)
     }
   }
 })

@@ -49,11 +49,11 @@ export default Vue.extend({
   grid-column-end: 1;
   grid-row-start: 1;
   grid-row-end: 3;
-  background: @green;
 
   ul {
 
     li {
+      margin-bottom: 10px;
       padding: 10px;
       display: flex;
       background: @light-green;
@@ -67,7 +67,6 @@ export default Vue.extend({
       }
 
       input {
-        transform: scale(1.2);
         margin-left: auto;
       }
     }
