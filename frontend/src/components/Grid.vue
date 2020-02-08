@@ -1,8 +1,8 @@
 <template>
   <div id="grid">
-    <search/>
+    <search @searchItem="updateSearchItem"/>
     <options/>
-    <selected/>
+    <selected :searchItem="searchItem"/>
   </div>
 </template>
 
@@ -19,6 +19,16 @@ export default Vue.extend({
     Search,
     Options,
     Selected
+  },
+  data () {
+    return {
+      searchItem: 0
+    }
+  },
+  methods: {
+    updateSearchItem (searchItem: number): void {
+      this.searchItem = searchItem
+    }
   }
 })
 </script>

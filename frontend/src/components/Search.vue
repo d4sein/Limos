@@ -1,7 +1,7 @@
 <template>
   <div id="search">
-    <input type="search" v-model="search" placeholder="Pesquisar..">
-    <button type="submit">Adicionar</button>
+    <input type="search" @keyup.enter="submitItem" v-model="search" placeholder="Pesquisar..">
+    <button type="submit" @click="submitItem">Adicionar</button>
     <ul id="autocomplete">
       <li v-for="(key, value) in arrayAutocomplete" :key=key @click="onClickAutocomplete(key, value)">{{ value }}</li>
     </ul>
@@ -14,14 +14,23 @@ import debounce from 'lodash.debounce'
 
 export default Vue.extend({
   name: 'search',
+  data () {
+    return {
+      search: '',
+      arrayAutocomplete: [],
+      tempArrayAutocomplete: []
+    }
+  },
   methods: {
+    submitItem: function (this: any): void {
+      this.$emit('searchItem', this.tempArrayAutocomplete[this.search])
+      this.search = ''
+    },
     onClickAutocomplete: function (id: number, search: string): void {
       this.search = search
     },
     getAnswer: debounce(function (this: any, search: string): void {
-      let firstAutocomplete: string = Object.keys(this.arrayAutocomplete)[0]
-
-      if (search.length === 0 || search === firstAutocomplete) {
+      if (search.length === 0) {
         this.arrayAutocomplete = []
         return
       }
@@ -29,17 +38,19 @@ export default Vue.extend({
       this.axios
         .get(`food?search=${search}`)
         .then((response: any) => (this.arrayAutocomplete = response.data))
+        .then(() => {
+          if (typeof this.arrayAutocomplete[search] !== 'undefined') {
+            // `tempArrayAutocomplete` is a shadow of `arrayAutocomplete`
+            // that holds its later values.
+            this.tempArrayAutocomplete = this.arrayAutocomplete
+            this.arrayAutocomplete = []
+          }
+        })
         .catch(console.error)
     }, 300)
   },
-  data () {
-    return {
-      search: '',
-      arrayAutocomplete: []
-    }
-  },
   watch: {
-    search: function (newSearch: string, oldSearch: string) {
+    search: function (newSearch: string, oldSearch: string): void {
       this.getAnswer(newSearch)
     }
   }
